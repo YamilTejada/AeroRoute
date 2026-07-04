@@ -1,14 +1,78 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from database import SessionLocal, engine
+from database import SessionLocal, engine, is_sqlite
 import models_database #Importar localmente
 import heapq
-
-# Crear las tablas en caso no existan en Supabase
-models_database.Base.metadata.create_all(bind=engine)
+import csv
+import os
 
 app = FastAPI()
+
+@app.on_event("startup")
+def startup_event():
+    # Crear las tablas en caso no existan (en SQLite creará el archivo local_airports.db) - Reload Trigger
+    models_database.Base.metadata.create_all(bind=engine)
+    
+    # Si estamos en SQLite y las tablas están vacías, cargamos los datos de los CSV
+    if is_sqlite:
+        db = SessionLocal()
+        try:
+            # Importar aeropuertos
+            aeropuertos_count = db.query(models_database.Airport).count()
+            if aeropuertos_count == 0:
+                print("Base de datos SQLite vacía. Importando aeropuertos desde CSV...")
+                csv_path_airports = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "airports.csv")
+                if os.path.exists(csv_path_airports):
+                    with open(csv_path_airports, mode="r", encoding="utf-8") as f:
+                        reader = csv.DictReader(f)
+                        airports_to_insert = []
+                        for row in reader:
+                            airport = models_database.Airport(
+                                iata=row["iata"],
+                                name=row["name"],
+                                city=row["city"],
+                                country=row["country"],
+                                latitude=float(row["latitude"]) if row["latitude"] else 0.0,
+                                longitude=float(row["longitude"]) if row["longitude"] else 0.0
+                            )
+                            airports_to_insert.append(airport)
+                        if airports_to_insert:
+                            db.bulk_save_objects(airports_to_insert)
+                            db.commit()
+                            print(f"Se importaron {len(airports_to_insert)} aeropuertos exitosamente.")
+                else:
+                    print(f"No se encontró el archivo CSV de aeropuertos en: {csv_path_airports}")
+            
+            # Importar rutas
+            rutas_count = db.query(models_database.Route).count()
+            if rutas_count == 0:
+                print("Base de datos SQLite vacía. Importando rutas desde CSV...")
+                csv_path_routes = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "routes.csv")
+                if os.path.exists(csv_path_routes):
+                    with open(csv_path_routes, mode="r", encoding="utf-8") as f:
+                        reader = csv.DictReader(f)
+                        routes_to_insert = []
+                        for row in reader:
+                            route = models_database.Route(
+                                id=int(row["id"]) if "id" in row and row["id"] else None,
+                                source_airport=row["source_airport"],
+                                destination_airport=row["destination_airport"],
+                                distance_km=float(row["distance_km"]) if row["distance_km"] else 0.0
+                            )
+                            routes_to_insert.append(route)
+                        if routes_to_insert:
+                            db.bulk_save_objects(routes_to_insert)
+                            db.commit()
+                            print(f"Se importaron {len(routes_to_insert)} rutas exitosamente.")
+                else:
+                    print(f"No se encontró el archivo CSV de rutas en: {csv_path_routes}")
+        except Exception as e:
+            db.rollback()
+            print(f"Error importando datos desde CSV: {e}")
+        finally:
+            db.close()
+
 
 # ==========================================
 # CONFIGURACIÓN DE CORS
