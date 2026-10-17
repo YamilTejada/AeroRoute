@@ -49,8 +49,8 @@ export default function MapVisualization({
     data: 'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson',
     stroked: true,
     filled: true,
-    getFillColor: [15, 23, 42, 255], 
-    getLineColor: [30, 41, 59, 255], 
+    getFillColor: [32, 41, 44, 255],
+    getLineColor: [55, 68, 70, 255],
     lineWidthMinPixels: 1,
   });
 
@@ -64,7 +64,7 @@ export default function MapVisualization({
     id: 'airports-glow-layer',
     data: validAirports,
     pickable: false,
-    opacity: 0.2 + (intensity * 0.3), // Animación de pulsación
+    opacity: 0.08 + (intensity * 0.1), // Animación de pulsación
     stroked: false,
     filled: true,
     radiusScale: 1,
@@ -82,10 +82,10 @@ export default function MapVisualization({
     },
     getFillColor: d => {
         if (appMode === 'routing') {
-            if (source && d.iata === source) return [56, 189, 248, 255]; // Cian Neón
-            if (destination && d.iata === destination) return [167, 139, 250, 255]; // Morado Neón
+            if (source && d.iata === source) return [145, 189, 176, 255]; // Cian Neón
+            if (destination && d.iata === destination) return [213, 186, 146, 255]; // Morado Neón
         } else if (appMode === 'mst') {
-            if (mstCountry && d.country === mstCountry) return [251, 191, 36, 150]; // Amarillo Neón
+            if (mstCountry && d.country === mstCountry) return [213, 186, 146, 100]; // Dorado suave
         }
         return [0, 0, 0, 0];
     },
@@ -121,14 +121,14 @@ export default function MapVisualization({
         if (appMode === 'routing') {
             if (source && d.iata === source) return [255, 255, 255, 255]; 
             if (destination && d.iata === destination) return [255, 255, 255, 255]; 
-            if (sourceCountry || destCountry) return [148, 163, 184, 80]; 
-            return [255, 255, 255, 120]; 
+            if (sourceCountry || destCountry) return [154, 171, 165, 80];
+            return [192, 207, 201, 150];
         } else if (appMode === 'mst') {
             if (mstCountry && d.country === mstCountry) return [255, 255, 255, 255]; // Núcleo blanco
-            if (mstCountry && d.country !== mstCountry) return [148, 163, 184, 40]; // Super atenuado
-            return [255, 255, 255, 120]; // Blanco tenue para MST global
+            if (mstCountry && d.country !== mstCountry) return [154, 171, 165, 40]; // Super atenuado
+            return [192, 207, 201, 150]; // Blanco tenue para MST global
         }
-        return [255, 255, 255, 120];
+        return [192, 207, 201, 150];
     },
     updateTriggers: {
         getRadius: [appMode, sourceCountry, destCountry, mstCountry, source, destination],
@@ -175,11 +175,11 @@ export default function MapVisualization({
       new ArcLayer({
         id: 'flight-arcs-glow',
         data: arcData,
-        getWidth: 12 + (intensity * 8), 
+        getWidth: 7 + (intensity * 3),
         getSourcePosition: d => d.sourcePosition,
         getTargetPosition: d => d.targetPosition,
-        getSourceColor: [56, 189, 248, 80], 
-        getTargetColor: [167, 139, 250, 80], 
+        getSourceColor: [145, 189, 176, 25],
+        getTargetColor: [213, 186, 146, 25],
       })
     );
 
@@ -191,8 +191,8 @@ export default function MapVisualization({
         getWidth: 3,
         getSourcePosition: d => d.sourcePosition,
         getTargetPosition: d => d.targetPosition,
-        getSourceColor: [56, 189, 248, 255], 
-        getTargetColor: [167, 139, 250, 255], 
+        getSourceColor: [145, 189, 176, 255],
+        getTargetColor: [213, 186, 146, 255],
       })
     );
 
@@ -205,8 +205,8 @@ export default function MapVisualization({
             getText: d => d.text,
             getSize: 12, 
             getColor: d => {
-                if (d.isFirst) return [56, 189, 248, 255];
-                if (d.isLast) return [167, 139, 250, 255];
+                if (d.isFirst) return [145, 189, 176, 255];
+                if (d.isLast) return [213, 186, 146, 255];
                 return [255, 255, 255, 255];
             },
             getAngle: 0,
@@ -216,7 +216,7 @@ export default function MapVisualization({
             fontFamily: 'sans-serif',
             fontWeight: 'bold',
             background: true,
-            getBackgroundColor: [15, 23, 42, 230], 
+            getBackgroundColor: [27, 34, 36, 240],
         })
     );
   }
@@ -249,8 +249,8 @@ export default function MapVisualization({
               getWidth: 3.5, // Un poco más grueso para que se vea genial
               getSourcePosition: d => d.sourcePosition,
               getTargetPosition: d => d.targetPosition,
-              getSourceColor: [251, 191, 36, 180], // Amber 400 con algo de transparencia
-              getTargetColor: [251, 191, 36, 180], 
+              getSourceColor: [213, 186, 146, 210], // Dorado suave con transparencia
+              getTargetColor: [213, 186, 146, 210],
           })
       );
       
@@ -260,11 +260,11 @@ export default function MapVisualization({
             id: 'mst-arcs-glow',
             data: mstArcData,
             pickable: false,
-            getWidth: 6 + (intensity * 4), 
+            getWidth: 5 + (intensity * 2),
             getSourcePosition: d => d.sourcePosition,
             getTargetPosition: d => d.targetPosition,
-            getSourceColor: [251, 191, 36, 30], 
-            getTargetColor: [251, 191, 36, 30], 
+            getSourceColor: [213, 186, 146, 12],
+            getTargetColor: [213, 186, 146, 12],
         })
     );
   }
@@ -274,7 +274,7 @@ export default function MapVisualization({
     
     // Estilos principales del glassmorphism
     const style = {
-      backgroundColor: 'rgba(15, 23, 42, 0.7)',
+      backgroundColor: 'rgba(27, 34, 36, 0.97)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
       border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -294,23 +294,23 @@ export default function MapVisualization({
         return {
           html: `
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #94A3B8; font-weight: 700;">
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #A3B1AD; font-weight: 700;">
                 ${object.country}
               </div>
-              <div style="font-weight: 800; font-size: 20px; color: #38BDF8; line-height: 1.1;">
+              <div style="font-weight: 800; font-size: 20px; color: #91BDB0; line-height: 1.1;">
                 ${object.city}
               </div>
               <div style="margin-top: 6px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <div style="display: flex; align-items: center; gap: 8px; color: #E2E8F0; font-weight: 500; font-size: 14px;">
+                <div style="display: flex; align-items: center; gap: 8px; color: #D5DEDA; font-weight: 500; font-size: 14px;">
                   <span style="font-size: 18px; filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));">✈️</span> 
                   <span style="flex: 1;">${object.name}</span>
-                  <span style="background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.3); color: #FBBF24; padding: 2px 6px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px;">
+                  <span style="background: rgba(162, 180, 203, 0.12); border: 1px solid rgba(162, 180, 203, 0.25); color: #A2B4CB; padding: 2px 6px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px;">
                     ${object.iata}
                   </span>
                 </div>
               </div>
-              <div style="margin-top: 8px; font-size: 11px; color: #64748B; font-family: monospace; letter-spacing: 0.5px; background: rgba(0,0,0,0.3); padding: 6px; border-radius: 6px; text-align: center;">
-                LAT <span style="color:#94A3B8">${object.latitude.toFixed(4)}</span> &nbsp;•&nbsp; LNG <span style="color:#94A3B8">${object.longitude.toFixed(4)}</span>
+              <div style="margin-top: 8px; font-size: 11px; color: #879793; font-family: monospace; letter-spacing: 0.5px; background: rgba(0,0,0,0.3); padding: 6px; border-radius: 6px; text-align: center;">
+                LAT <span style="color:#A3B1AD">${object.latitude.toFixed(4)}</span> &nbsp;•&nbsp; LNG <span style="color:#A3B1AD">${object.longitude.toFixed(4)}</span>
               </div>
             </div>
           `,
@@ -322,14 +322,14 @@ export default function MapVisualization({
         return {
           html: `
              <div style="display: flex; flex-direction: column; gap: 8px; text-align: center;">
-              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #FBBF24; font-weight: 700;">
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #D5BA92; font-weight: 700;">
                 Conexión de Red Óptima
               </div>
               <div style="font-weight: 800; font-size: 22px; color: #fff; display: flex; justify-content: center; align-items: center; gap: 12px; margin: 4px 0;">
-                ${object.source} <span style="color: #64748B; font-size: 16px;">➔</span> ${object.target}
+                ${object.source} <span style="color: #879793; font-size: 16px;">➔</span> ${object.target}
               </div>
-              <div style="margin-top: 4px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); color: #94A3B8; font-size: 13px;">
-                Distancia: <span style="color: #38BDF8; font-weight: 700; font-size: 15px; margin-left: 4px;">${object.distance.toLocaleString()} km</span>
+              <div style="margin-top: 4px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); color: #A3B1AD; font-size: 13px;">
+                Distancia: <span style="color: #91BDB0; font-weight: 700; font-size: 15px; margin-left: 4px;">${object.distance.toLocaleString()} km</span>
               </div>
             </div>
           `,
@@ -341,11 +341,11 @@ export default function MapVisualization({
         return {
           html: `
              <div style="display: flex; flex-direction: column; gap: 8px; text-align: center;">
-              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #38BDF8; font-weight: 700;">
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #91BDB0; font-weight: 700;">
                 Conexión de Vuelo
               </div>
               <div style="font-weight: 800; font-size: 22px; color: #fff; display: flex; justify-content: center; align-items: center; gap: 12px; margin: 4px 0;">
-                ${object.source} <span style="color: #64748B; font-size: 16px;">➔</span> ${object.target}
+                ${object.source} <span style="color: #879793; font-size: 16px;">➔</span> ${object.target}
               </div>
             </div>
           `,
@@ -357,7 +357,7 @@ export default function MapVisualization({
   };
 
   return (
-    <div className="w-full h-full absolute top-0 left-0 bg-[#020617]">
+    <div className="w-full h-full absolute top-0 left-0 bg-space-dark">
       <DeckGL
         initialViewState={INITIAL_VIEW_STATE}
         controller={true}
@@ -365,7 +365,7 @@ export default function MapVisualization({
         getTooltip={getTooltipContent}
       />
       
-      <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-screen" 
+      <div className="absolute inset-0 pointer-events-none opacity-5 mix-blend-screen"
            style={{
              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
              backgroundSize: '40px 40px'

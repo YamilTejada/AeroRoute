@@ -65,7 +65,7 @@ function App() {
       } else {
           setError(result?.error || "La ruta no pudo ser encontrada.");
       }
-    } catch (err) {
+    } catch {
       setError("Error conectando con el backend.");
     }
     setIsLoading(false);
@@ -84,7 +84,7 @@ function App() {
       } else {
           setError(result?.error || "No se pudo generar la red óptima para esta región.");
       }
-    } catch (err) {
+    } catch {
       setError("Error conectando con el backend para Kruskal.");
     }
     setIsLoading(false);

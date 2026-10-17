@@ -1,11 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-space-dark: #020617; /* Slate 950 - Elegant deep dark blue/gray */
-  --color-glass-bg: rgba(15, 23, 42, 0.75); /* Slate 900 with glass effect */
-  --color-glass-border: rgba(255, 255, 255, 0.08);
-  --color-neon-cyan: #38bdf8; /* Sky 400 - Professional aviation blue */
-  --color-neon-purple: #a78bfa; /* Violet 400 - Elegant accent */
+  --color-space-dark: #111516;
+  --color-glass-bg: rgba(27, 34, 36, 0.96);
+  --color-glass-border: rgba(195, 211, 207, 0.13);
+  --color-accent-primary: #91bdb0;
+  --color-accent-secondary: #d5ba92;
+  --color-network: #d5ba92;
+  --color-network-hover: #e5cdae;
+
+  /* Neutral surfaces shared by the panel, controls and result cards. */
+  --color-slate-900: #17201e;
+  --color-slate-800: #2a3433;
+  --color-slate-500: #879793;
+  --color-slate-400: #a3b1ad;
+  --color-slate-300: #cbd4d1;
+  --color-gray-500: #87938f;
+  --color-gray-400: #a5b0ac;
+  --color-gray-300: #cbd4d1;
+  --color-gray-600: #8b9893;
+  --color-white: #edf1ee;
 }
 
 body {
@@ -14,7 +28,7 @@ body {
   overflow: hidden;
   background-color: var(--color-space-dark);
   color: white;
-  font-family: sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 /* Custom Scrollbar */
@@ -51,4 +65,31 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--scrollbar-bg) !important;
   border-radius: 4px;
+}
+
+/* Quiet interaction feedback without colored glow. */
+button, input {
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 3px;
+}
+
+input {
+  background-color: #141b1c;
+}
+
+input:focus {
+  border-color: var(--color-accent-primary);
+}
+
+::selection {
+  background-color: #91bdb0;
+  color: #17201e;
 }
