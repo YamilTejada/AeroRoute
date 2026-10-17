@@ -4,6 +4,35 @@ AeroRoute es una aplicación web interactiva que permite visualizar aeropuertos 
 
 La aplicación cuenta con una arquitectura de base de datos híbrida (Supabase en la nube con fallback automático a SQLite local) lo que garantiza su funcionamiento sin conexión o ante caídas del servicio cloud.
 
+**Dato importante: En este proyecto se toma en consideración especialmente el aeropuerto de Lima, Perú, con la finalidad de optimizar los datos. La aplicación también funciona correctamente con los demás aeropuertos, aunque el enfoque principal está en Lima, Perú.**
+
+## 📸 Imágenes de la Aplicación
+
+
+### Buscador de rutas con BFS — Menos escalas
+
+BFS encuentra una ruta con la menor cantidad de escalas entre el aeropuerto de origen y el de destino, utilizando las conexiones disponibles en los datos. En este ejemplo, el recorrido de **Lima (LIM) a Jining (JNG)** tiene **2 escalas** y una distancia total de **21 016 km**.
+
+![AeroRoute: búsqueda de rutas entre aeropuertos](assets/img-buscador-bfs.png)
+
+### Buscador de rutas con Dijkstra — Menor distancia
+
+Dijkstra encuentra la ruta con la menor distancia total en kilómetros, aunque requiera más escalas. Para el mismo trayecto de **Lima (LIM) a Jining (JNG)**, el resultado tiene **3 escalas** y recorre **17 960 km**. Las dos capturas muestran cómo cambia el recorrido según el criterio seleccionado.
+
+![AeroRoute: búsqueda de rutas entre aeropuertos](assets/img-buscador-dijkstra.png)
+
+### Red óptima global con Kruskal
+
+Kruskal selecciona conexiones entre aeropuertos para minimizar la distancia total de la red sin formar ciclos. Al dejar vacío el filtro de país, el cálculo utiliza el conjunto global de datos. En esta captura, la red resultante conecta **1772 aeropuertos mediante 1771 conexiones**, con una distancia acumulada de **643 085 km**.
+
+![AeroRoute: visualización de la red óptima con Kruskal](assets/img-red-optima-1.png)
+
+### Red óptima por país — Estados Unidos
+
+El filtro de país permite aplicar Kruskal únicamente a los aeropuertos y conexiones de la región seleccionada. En este ejemplo de **Estados Unidos**, la red resultante conecta **283 aeropuertos mediante 282 conexiones**, con una distancia acumulada de **92 856 km**.
+
+![AeroRoute: visualización de la red óptima con Kruskal](assets/img-red-optima-2.png)
+
 ---
 
 ## 🛠️ Tecnologías Utilizadas
