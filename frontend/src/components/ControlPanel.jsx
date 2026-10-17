@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import AutocompleteInput from './AutocompleteInput';
 import { PlaneTakeoff, ShieldAlert, Route, MapPin, RefreshCw, Zap, Ruler, Network, Globe } from 'lucide-react';
 
